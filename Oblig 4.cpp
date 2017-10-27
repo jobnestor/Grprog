@@ -1,8 +1,5 @@
-//  Fil:  FRODEH \ CPP \ OBLIGER \ OBLIG_4.TPL
-//
-//  Skjellettet/template for obligatorisk oppgave nr.4 i  C++ -programmering.
-//  Omhandler/"dekker" kap.2-6 i læreboka.
-
+// Job Nestor Bahner  job.nestor@gmail.com  studnr: 494300
+// Copyright © job.nestor@gmail.com
 
                              //  INCLUDE:
 #include <iostream>          //  cout, cin
