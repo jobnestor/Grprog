@@ -220,26 +220,26 @@ Tid Tid :: tidspunktForskjell(const Tid tt)  // Forskjellen mellom to tidspkt:
       sum = (s2 - s1);
     }
 
-  if (time == tt.time)  {
-    forskjell.time = 0;              // regner om tid til timer,
+  if (time == tt.time)  { // Sjekker om tidsenhet er lik
+    forskjell.time = 0;              // Hvis time = tt.time, blir time lik null.
     } else  {
       forskjell.time = ((sum / 3600) + 1);   // regner om tid til timer,
     }
 
-  if (minutt == tt.minutt)  {
-    forskjell.minutt = 0;
-    } else  {
+  if (minutt == tt.minutt)  { // Sjekker om tidsenhet er lik
+    forskjell.minutt = 0;     // Hvis mimutt = tt-minutt, blir minutt lik null.
+  } else  {                                   // Regner ut tid til minutter
       forskjell.minutt = (((sum / 60) - (forskjell.time * 60)) + 60);
     }
 
-  if (sekund == tt.sekund)  {
-  forskjell.sekund = 0;
-} else  {
+  if (sekund == tt.sekund)  { // Sjekker om tidsenhet er lik
+  forskjell.sekund = 0;       // Hvis sekund = tt.sekund, blir sekund lik  null.
+} else  {                                        // regner til til minutter
   forskjell.sekund = (sum - (forskjell.minutt * 60) - (forskjell.time * 3600) + 3600);
-}
-
- return forskjell;
-}             // Returnerer forskjell som tidsobjekt
+}                                    // legger til for aa unngaa negative tall
+                                      // Og for aa faa riktig differanse
+ return forskjell;                //     Der feks. diff(5, 3), ikke er 1, men 2.
+}  // Returnerer forskjell som tidsobjekt
 
 
 int Tid :: datoForskjell(const Tid tt)      //  Antall dager mellom to datoer:
@@ -295,4 +295,3 @@ int les(const int min, const int max)  {
   }
   return tall;               //  Returnerer akseptert (gyldig) tall
 }
-
