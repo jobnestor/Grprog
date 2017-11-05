@@ -1,4 +1,4 @@
-// Job Nestor Bahner  job.nestor@gmail.com  studnr: 494300
+// Job Nestor Bahner  job.nestor@gmail.com  studnr: 494300 Klasse: BITSEC
 // Copyright © job.nestor@gmail.com
 
                              //  INCLUDE:
@@ -72,16 +72,16 @@ int main()  {
       case 'X': {
                   tid1.likDato(tid2);
                   if(tid1.likDato(tid2) == false)  {
+                    cout << "\n\nDatoene er ulike:\n";
+                  } else  {
                     tid3 = tid1.tidspunktForskjell(tid2);
                     cout << "forskjellen av tidene er:\t";
                     tid3.skrivTidspunkt();
-                  } else  {
-                    cout << "\n\nDatoene er like:\n";
                   }
                   break;
                 }
 
-      case 'Y':    tid1.datoForskjell(tid2);
+      case 'Y':
                    cout << tid1.datoForskjell(tid2); break;
 
       default:   skrivMeny();   break;
@@ -154,7 +154,9 @@ void Tid :: skrivTid()             //  På formen:  dd/mm-aaaa   tt:mm:ss
 
 void Tid :: lesDato()              //  Leser inn ny dato:
   {
-    int aa, ma, da, sjekk;          // "tempvariabler"
+        int aa, ma, da, sjekk;     // "tempvariabler"
+  do  {
+
       cout << "gammel dato;\t";   // Skriver ut gammel dato
               skrivDato();
       cout << "\ndag:\t";
@@ -167,8 +169,9 @@ void Tid :: lesDato()              //  Leser inn ny dato:
 
       if (sjekk == 0)  {
         cout << "feil dato:\t";   //Hvis dagnummer returner 0 er det feil dato
-                lesDato();        // Kjorer paa nytt om feil dato
-      }
+      }                         // Kjorer paa nytt om feil dato
+      }while(sjekk == 0);
+
       maaned = ma, dag = da, aar = aa;  // Setter formelle lik lokale variabler
       cout << "ny dato er:\t";
               skrivDato();          // Skriver ny Dato
@@ -179,15 +182,14 @@ void Tid :: lesTidspunkt()         //  Leser inn nytt tidspunkt
     int tt, mm, ss;
     cout << "\ngammelt tidspunkt\t";
               skrivTidspunkt();     // Skriver tidspunkt
-      cout << "Hvilken time er det? ";
-              tt = les(0, 24);        // Leser time i rett intervall
-      cout << "Hvilket minutt er det? ";
-              mm = les(0, 60);          // Leser minutt i rett intervall
-      cout << "Hvilket sekund er det? ";
-              ss = les(0, 60);        // Leser sekund i rett intervall
-      cout << "nytt tidspunkt";
+      cout << "\n Hvilken time er det? ";
+              tt = les(0, 23);        // Leser time i rett intervall
+      cout << "\n Hvilket minutt er det? ";
+              mm = les(0, 59);          // Leser minutt i rett intervall
+      cout << "\n Hvilket sekund er det? ";
+              ss = les(0, 59);        // Leser sekund i rett intervall
       time = tt, minutt = mm, sekund = ss;  // Setter formelle lik lokale var.
-      cout << "nytt tidspunkt er:\t";
+      cout << "\n nytt tidspunkt er:\t";
               skrivTidspunkt();       // Skriver ut nytt tidspunkt
     }
 
@@ -201,21 +203,44 @@ bool Tid :: likDato(const Tid t)   //  Er to datoer like eller ei:
 {                           // Returnerer true hvis like datoer
                             // Returneres false hvis ulike
  return((maaned == t.maaned && dag == t.dag && aar == t.aar) ? true : false);
+
 }
 
 Tid Tid :: tidspunktForskjell(const Tid tt)  // Forskjellen mellom to tidspkt:
-{   Tid forskjell;
-    if (time > tt.time)  {          // Hvis tid1 time er stoore en tid2 time
-      forskjell.time = (time - tt.time);     // settes forskell lik differansen
-      forskjell.minutt = (minutt - tt.minutt);    // Mellom tid1 og tid2
-      forskjell.sekund = (sekund - tt.sekund);
-    } else if(tt.time > time)  {        // Hvis tid2 er stoore enn tid1
-      forskjell.time = (tt.time - time);    // settes forskjell lik diff mellom
-      forskjell.time = (tt.minutt - minutt);  // tid2 og tid1
-      forskjell.sekund = (tt.sekund - sekund);
+{
+    Tid forskjell;                        //  Forskjellen mellom to tidspunkt:
+    int sum;                         //tid1.tidspunktsforkjell(tid1).
+    int s1 = ((time * 3600) + (minutt * 60) + sekund);      // tid1 om til sek.
+    int s2 = ((tt.time * 3600) + (tt.minutt * 60) + tt.sekund);// tid2 om til sek.
+
+    if(s1 > s2)  {
+      sum = (s1 - s2);//trekker fra tid1 fra tid2
+  }
+    else  {
+      sum = (s2 - s1);
     }
-    return forskjell;             // Returnerer tidsobjekt med differanse
-  }                                           // Mellom begge tidene
+
+  if (time == tt.time)  {
+    forskjell.time = 0;              // regner om tid til timer,
+    } else  {
+      forskjell.time = ((sum / 3600) + 1);   // regner om tid til timer,
+    }
+
+  if (minutt == tt.minutt)  {
+    forskjell.minutt = 0;
+    } else  {
+      forskjell.minutt = (((sum / 60) - (forskjell.time * 60)) + 60);
+    }
+
+  if (sekund == tt.sekund)  {
+  forskjell.sekund = 0;
+} else  {
+  forskjell.sekund = (sum - (forskjell.minutt * 60) - (forskjell.time * 3600) + 3600);
+}
+
+ return forskjell;
+}             // Returnerer forskjell som tidsobjekt
+
 
 int Tid :: datoForskjell(const Tid tt)      //  Antall dager mellom to datoer:
   {
@@ -225,15 +250,18 @@ int Tid :: datoForskjell(const Tid tt)      //  Antall dager mellom to datoer:
     t2 = dagnummer(tt.dag, tt.maaned, tt.aar);  // Definerer t2 sitt dagnummer
 
     for (int i = 1600; i < aar; i++)  {   // begynner for loop som teller dager
+
         (skuddaar(i)) ? t1 += 366  : t1 += 365; // Legger til 366 hvis skuddaar
-    }                                          // Legger til 365 hvis ikke.
+      }                                          // Legger til 365 hvis ikke.
 
     for (int i = 1600; i < tt.aar; i++)  {    // ----------- || --------------
-        (skuddaar(i)) ?  t2 += 366 : t2 += 365;
-    }
-    (t2 > t1) ? dagForskjell = (t2 - t1) : dagForskjell = (t1 - t2);
+
+      (skuddaar(i)) ?  t2 += 366 : t2 += 365;
+
+      }
+      (t2 > t1) ? dagForskjell = (t2 - t1) : dagForskjell = (t1 - t2);
                                     // Summerer differansen mellom t1 og t2
-  return dagForskjell;                  // returnerer forskjellen
+      return dagForskjell;                  // returnerer forskjellen
     }
 
 //  ***********************  DEFINISJON AV FUNKSJONER:  ***********************
@@ -267,3 +295,4 @@ int les(const int min, const int max)  {
   }
   return tall;               //  Returnerer akseptert (gyldig) tall
 }
+
